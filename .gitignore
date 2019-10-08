@@ -17,3 +17,5 @@ obj/
 cube/
 
 openocd-stm32f7/
+
+.project

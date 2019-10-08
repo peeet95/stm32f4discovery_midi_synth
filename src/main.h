@@ -1,14 +1,12 @@
 /**
   ******************************************************************************
-  * @file    FMC/FMC_SDRAM_DataMemory/Inc/main.h
+  * @file    FMC/FMC_SDRAM/Inc/main.h 
   * @author  MCD Application Team
-  * @version V1.0.2
-  * @date    18-November-2015 
   * @brief   Header for main.c module
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2015 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -34,28 +32,28 @@
   *
   ******************************************************************************
   */
-
+  
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __MAIN_H
 #define __MAIN_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f7xx_hal.h"
-#include "stm32f7xx_hal_sai.h"
-#include "stm32f7xx_hal_tim.h"
-#include "stm32f7xx_hal_pcd.h"
-#include "stm32f7xx_hal_hcd.h"
-#include "stm32f7xx_hal_i2s.h"
+#include "stm32f4xx_hal.h"
+#include "stm32f4xx_hal_sai.h"
+#include "stm32f4xx_hal_tim.h"
+#include "stm32f4xx_hal_pcd.h"
+#include "stm32f4xx_hal_hcd.h"
+#include "stm32f4xx_hal_i2s.h"
 
 #include "usbd_core.h"
 #include "usbd_desc.h"
 #include "usbd_audio.h"
 #include "usbd_midi_if.h"
 
-#include "stm32746g_discovery.h"
-#include "stm32746g_discovery_audio.h"
-#include "stm32746g_discovery_sd.h"
-#include "stm32746g_discovery_qspi.h"
+#include "stm32f429i_discovery.h"
+#include "stm32f429i_discovery_audio.h" //TODO: port from stm32f4-disco to stm32f429i-disco
+#include "stm32f429i_discovery_sd.h" //TODO: port from stm32f413h-disco to stm32f429i-disco
+#include "stm32f429i_discovery_qspi.h" //TODO: port from stm32f413h-disco to stm32f429i-disco
 
 #include "ff_gen_drv.h"
 #include "sd_diskio.h"
@@ -63,6 +61,9 @@
 #include "qspi_wrapper.h"
 
 #include <arm_math.h>
+
+/* Exported types ------------------------------------------------------------*/
+/* Exported constants --------------------------------------------------------*/
 
 #define MASTER_VOLUME 70
 
@@ -73,7 +74,7 @@
 #define POLYPHONY 64
 
 //#define AUDIO_BUF_SIZE 4096
-#define AUDIO_BUF_SIZE 8192 
+#define AUDIO_BUF_SIZE 8192
 //#define AUDIO_BUF_SIZE 16384
 //#define AUDIO_BUF_SIZE 32768
 
@@ -90,6 +91,30 @@
 //#define SOUNDFONT_FILE "FLUIDR3.SF2"
 //#define SOUNDFONT_FILE "COMPIFNT.SF2"
 
+#define SDRAM_BANK_ADDR                 ((uint32_t)0xD0000000)
+
+/* #define SDRAM_MEMORY_WIDTH            FMC_SDRAM_MEM_BUS_WIDTH_8 */
+#define SDRAM_MEMORY_WIDTH            FMC_SDRAM_MEM_BUS_WIDTH_16
+
+/* #define SDCLOCK_PERIOD                   FMC_SDRAM_CLOCK_PERIOD_2 */
+#define SDCLOCK_PERIOD                FMC_SDRAM_CLOCK_PERIOD_3
+
+#define SDRAM_TIMEOUT     ((uint32_t)0xFFFF) 
+
+#define SDRAM_MODEREG_BURST_LENGTH_1             ((uint16_t)0x0000)
+#define SDRAM_MODEREG_BURST_LENGTH_2             ((uint16_t)0x0001)
+#define SDRAM_MODEREG_BURST_LENGTH_4             ((uint16_t)0x0002)
+#define SDRAM_MODEREG_BURST_LENGTH_8             ((uint16_t)0x0004)
+#define SDRAM_MODEREG_BURST_TYPE_SEQUENTIAL      ((uint16_t)0x0000)
+#define SDRAM_MODEREG_BURST_TYPE_INTERLEAVED     ((uint16_t)0x0008)
+#define SDRAM_MODEREG_CAS_LATENCY_2              ((uint16_t)0x0020)
+#define SDRAM_MODEREG_CAS_LATENCY_3              ((uint16_t)0x0030)
+#define SDRAM_MODEREG_OPERATING_MODE_STANDARD    ((uint16_t)0x0000)
+#define SDRAM_MODEREG_WRITEBURST_MODE_PROGRAMMED ((uint16_t)0x0000) 
+#define SDRAM_MODEREG_WRITEBURST_MODE_SINGLE     ((uint16_t)0x0200) 
+
+/* Exported macro ------------------------------------------------------------*/
+/* Exported functions ------------------------------------------------------- */
 
 #endif /* __MAIN_H */
 
