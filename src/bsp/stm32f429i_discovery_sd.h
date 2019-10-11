@@ -43,7 +43,7 @@
 #endif 
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f413h_discovery.h"
+#include "stm32f429i_discovery.h"
 
 /** @addtogroup BSP
   * @{

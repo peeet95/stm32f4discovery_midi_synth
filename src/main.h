@@ -55,9 +55,6 @@
 #include "usbd_midi_if.h"*/
 
 #include "stm32f429i_discovery.h"
-#include "stm32f429i_discovery_audio.h" //TODO: port from stm32f4-disco to stm32f429i-disco
-#include "stm32f429i_discovery_sd.h" //TODO: port from stm32f413h-disco to stm32f429i-disco
-#include "stm32f429i_discovery_qspi.h" //TODO: port from stm32f413h-disco to stm32f429i-disco
 
 #include "ff_gen_drv.h"
 #include "sd_diskio.h"
