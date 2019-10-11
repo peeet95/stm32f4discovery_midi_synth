@@ -19,3 +19,7 @@ cube/
 openocd-stm32f7/
 
 .project
+Debug/
+Release/
+\[ATT\]9788/
+

@@ -129,7 +129,7 @@ b) RECORD A FILE:
 ==============================================================================*/
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f4_discovery_audio.h"
+#include "stm32f429i_discovery_audio.h"
 
 /** @addtogroup BSP
   * @{

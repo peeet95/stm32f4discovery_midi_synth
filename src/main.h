@@ -44,11 +44,15 @@
 #include "stm32f4xx_hal_pcd.h"
 #include "stm32f4xx_hal_hcd.h"
 #include "stm32f4xx_hal_i2s.h"
+#include "stm32f4xx_hal_pwr_ex.h"
+#include "stm32f4xx_hal_rcc.h"
+#include "stm32f4xx_hal_flash_ex.h"
+#include "stm32f429xx.h"
 
-#include "usbd_core.h"
+/*#include "usbd_core.h"
 #include "usbd_desc.h"
 #include "usbd_audio.h"
-#include "usbd_midi_if.h"
+#include "usbd_midi_if.h"*/
 
 #include "stm32f429i_discovery.h"
 #include "stm32f429i_discovery_audio.h" //TODO: port from stm32f4-disco to stm32f429i-disco

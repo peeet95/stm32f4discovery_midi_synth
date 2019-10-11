@@ -44,10 +44,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 /* Include audio component Driver */
-#include "../Components/cs43l22/cs43l22.h"
+//#include "../Components/cs43l22/cs43l22.h"
+// TODO: do i need a coresponding replacement? (cs43l22 is the audio dac on the stm32f4 disco board)
 
-#include "stm32f4_discovery.h"
-#include "../../../Middlewares/ST/STM32_Audio/Addons/PDM/Inc/pdm2pcm_glo.h"
+#include "stm32f429i_discovery.h"
+//#include "../../../Middlewares/ST/STM32_Audio/Addons/PDM/Inc/pdm2pcm_glo.h" //TODO: do i need this?
 
 /** @addtogroup BSP
   * @{

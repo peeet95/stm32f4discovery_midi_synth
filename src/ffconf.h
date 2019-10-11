@@ -12,12 +12,16 @@
 /*-----------------------------------------------------------------------------/
 / Additional user header to be used  
 /-----------------------------------------------------------------------------*/
-#include "stm32f7xx_hal.h"
+#include "stm32f4xx_hal.h"
 
 #ifdef USE_STM32746G_DISCOVERY
   #include "stm32746g_discovery_sd.h"
 #else
-  #error "Please select first the Board used in your application (in boardname_eval.h file)"
+  #ifdef USE_STM32F429I_DISCOVERY
+    #include "stm32f429i_discovery_sd.h"
+  #else
+    #error "Please select first the Board used in your application (in boardname_eval.h file)"
+  #endif
 #endif
 
 /*-----------------------------------------------------------------------------/

@@ -1,7 +1,7 @@
 #ifndef _QSPI_WRAPPER_H
 #define _QSPI_WRAPPER_H
 
-#include "stm32746g_discovery_qspi.h"
+#include "stm32f429i_discovery_qspi.h"
 
 typedef struct QSPI_FILE {
   size_t pos;

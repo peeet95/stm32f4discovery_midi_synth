@@ -1,6 +1,7 @@
 #include "main.h"
 #include "lfluidsynth.h"
 
+
 USBD_HandleTypeDef USBD_Device;
 
 /* Private function prototypes -----------------------------------------------*/
@@ -96,7 +97,7 @@ void QSPI_init() {
       (pQSPI_Info.ProgPageSize != 0x100)  || (pQSPI_Info.EraseSectorsNumber != 4096) ||
       (pQSPI_Info.ProgPagesNumber != 65536))
   {
-    BSP_LED_Off(LED1);
+    BSP_LED_Off(Led_TypeDef::LED3);
   }
 
 #ifdef QSPI_MEMORY_MAPPED
@@ -135,13 +136,13 @@ int main(void)
   SystemClock_Config();
 
   /* Configure LED1 and LED3 */
-  BSP_LED_Init(LED1);
+  BSP_LED_Init(Led_TypeDef::LED3);
 
   HAL_Delay(100);
 
   setbuf(stdout, NULL);
 
-  BSP_LED_Off(LED1);
+  BSP_LED_Off(Led_TypeDef::LED3);
 
 #ifdef SD_SOUNDFONT_ROM
   SD_init();
@@ -169,18 +170,18 @@ int main(void)
   sfont_id = fluid_synth_sfload(synth, SOUNDFONT_FILE, 1);
   fluid_synth_set_interp_method(synth, -1, FLUID_INTERP_NONE);
 //  fluid_synth_set_interp_method(synth, -1, FLUID_INTERP_LINEAR);
-  BSP_LED_On(LED1);
+  BSP_LED_On(Led_TypeDef::LED3);
 
   /* Make the connection and initialize to USB_OTG/usbdc_core */
-  USBD_Init(&USBD_Device, &AUDIO_Desc, 0);
+  /*USBD_Init(&USBD_Device, &AUDIO_Desc, 0);
   USBD_RegisterClass(&USBD_Device, &USBD_Midi_ClassDriver);
   USBD_Midi_RegisterInterface(&USBD_Device, &USBD_Midi_fops);
-  USBD_Start(&USBD_Device);
+  USBD_Start(&USBD_Device);*/
 
   HAL_Delay(5);
 
-  BSP_AUDIO_OUT_Init(OUTPUT_DEVICE_AUTO, MASTER_VOLUME, SAMPLE_RATE);
-  BSP_AUDIO_OUT_SetAudioFrameSlot(CODEC_AUDIOFRAME_SLOT_02);  // PCM 2-channel
+  //BSP_AUDIO_OUT_Init(OUTPUT_DEVICE_AUTO, MASTER_VOLUME, SAMPLE_RATE);
+  //BSP_AUDIO_OUT_SetAudioFrameSlot(CODEC_AUDIOFRAME_SLOT_02);  // PCM 2-channel  TODO: do i need this?
 
 #ifdef AUDIO_FORMAT_32BITS
   BSP_AUDIO_OUT_Play((uint32_t *)&buf[0], AUDIO_BUF_SIZE);
@@ -192,55 +193,10 @@ int main(void)
 
   while (1)
   {
-    BSP_LED_Toggle(LED1);
+    BSP_LED_Toggle(Led_TypeDef::LED3);
     HAL_Delay(1000);
   }
 
-}
-
-/**
-  * @brief  Clock Config.
-  * @param  hsai: might be required to set audio peripheral predivider if any.
-  * @param  AudioFreq: Audio frequency used to play the audio stream.
-  * @note   This API is called by BSP_AUDIO_OUT_Init() and BSP_AUDIO_OUT_SetFrequency()
-  *         Being __weak it can be overwritten by the application
-  * @retval None
-  */
-void BSP_AUDIO_OUT_ClockConfig(SAI_HandleTypeDef *hsai, uint32_t AudioFreq, void *Params)
-{
-  RCC_PeriphCLKInitTypeDef RCC_ExCLKInitStruct;
-
-  HAL_RCCEx_GetPeriphCLKConfig(&RCC_ExCLKInitStruct);
-
-  /* Set the PLL configuration according to the audio frequency */
-  if ((AudioFreq == AUDIO_FREQUENCY_11K) || (AudioFreq == AUDIO_FREQUENCY_22K) || (AudioFreq == AUDIO_FREQUENCY_44K))
-  {
-    /* Configure PLLSAI prescalers */
-    /* PLLI2S_VCO: VCO_429M
-    SAI_CLK(first level) = PLLI2S_VCO/PLLSAIQ = 429/2 = 214.5 Mhz
-    SAI_CLK_x = SAI_CLK(first level)/PLLI2SDivQ = 214.5/19 = 11.289 Mhz */
-    RCC_ExCLKInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SAI2;
-    RCC_ExCLKInitStruct.Sai2ClockSelection = RCC_SAI2CLKSOURCE_PLLI2S;
-    RCC_ExCLKInitStruct.PLLI2S.PLLI2SP = 8;
-    RCC_ExCLKInitStruct.PLLI2S.PLLI2SN = 429;
-    RCC_ExCLKInitStruct.PLLI2S.PLLI2SQ = 2;
-    RCC_ExCLKInitStruct.PLLI2SDivQ = 19;
-    HAL_RCCEx_PeriphCLKConfig(&RCC_ExCLKInitStruct);
-  }
-  else /* AUDIO_FREQUENCY_8K, AUDIO_FREQUENCY_16K, AUDIO_FREQUENCY_48K), AUDIO_FREQUENCY_96K */
-  {
-    /* SAI clock config
-    PLLI2S_VCO: VCO_344M
-    SAI_CLK(first level) = PLLI2S_VCO/PLLSAIQ = 344/7 = 49.142 Mhz
-    SAI_CLK_x = SAI_CLK(first level)/PLLI2SDivQ = 49.142/1 = 49.142 Mhz */
-    RCC_ExCLKInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SAI2;
-    RCC_ExCLKInitStruct.Sai2ClockSelection = RCC_SAI2CLKSOURCE_PLLI2S;
-    RCC_ExCLKInitStruct.PLLI2S.PLLI2SP = 8;
-    RCC_ExCLKInitStruct.PLLI2S.PLLI2SN = 344;
-    RCC_ExCLKInitStruct.PLLI2S.PLLI2SQ = 7;
-    RCC_ExCLKInitStruct.PLLI2SDivQ = 1;
-    HAL_RCCEx_PeriphCLKConfig(&RCC_ExCLKInitStruct);
-  }
 }
 
 
@@ -248,79 +204,57 @@ void BSP_AUDIO_OUT_ClockConfig(SAI_HandleTypeDef *hsai, uint32_t AudioFreq, void
   * @brief  System Clock Configuration
   *         The system Clock is configured as follow :
   *            System Clock source            = PLL (HSE)
-  *            SYSCLK(Hz)                     = 200000000
-  *            HCLK(Hz)                       = 200000000
+  *            SYSCLK(Hz)                     = 180000000
+  *            HCLK(Hz)                       = 180000000
   *            AHB Prescaler                  = 1
   *            APB1 Prescaler                 = 4
   *            APB2 Prescaler                 = 2
-  *            HSE Frequency(Hz)              = 25000000
-  *            PLL_M                          = 25
-  *            PLL_N                          = 400
+  *            HSE Frequency(Hz)              = 8000000
+  *            PLL_M                          = 8
+  *            PLL_N                          = 360
   *            PLL_P                          = 2
-  *            PLL_Q                          = 8
+  *            PLL_Q                          = 7
   *            VDD(V)                         = 3.3
   *            Main regulator output voltage  = Scale1 mode
-  *            Flash Latency(WS)              = 6
+  *            Flash Latency(WS)              = 5
   * @param  None
   * @retval None
   */
-
-// 200 mhz - don't know why but 216 mhz hang
-void SystemClock_Config(void)
+static void SystemClock_Config(void)
 {
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
   RCC_OscInitTypeDef RCC_OscInitStruct;
-  HAL_StatusTypeDef ret = HAL_OK;
+
+  /* Enable Power Control clock */
+  __HAL_RCC_PWR_CLK_ENABLE();
+
+  /* The voltage scaling allows optimizing the power consumption when the device is
+     clocked below the maximum system frequency, to update the voltage scaling value
+     regarding system frequency refer to product datasheet.  */
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
   /* Enable HSE Oscillator and activate PLL with HSE as source */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.HSIState = RCC_HSI_OFF;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 25;
-#ifdef FREQ_216
-  RCC_OscInitStruct.PLL.PLLN = 432;
-#else
-  RCC_OscInitStruct.PLL.PLLN = 400;
-#endif
+  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLN = 360;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-#ifdef FREQ_216
-  RCC_OscInitStruct.PLL.PLLQ = 9;
-#else
-  RCC_OscInitStruct.PLL.PLLQ = 8;
-#endif
+  RCC_OscInitStruct.PLL.PLLQ = 7;
+  HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
-  ret = HAL_RCC_OscConfig(&RCC_OscInitStruct);
-  if (ret != HAL_OK)
-  {
-    while (1) { ; }
-  }
+  /* Activate the Over-Drive mode */
+  HAL_PWREx_EnableOverDrive();
 
-  /* Activate the OverDrive to reach the 200 MHz Frequency */
-  ret = HAL_PWREx_EnableOverDrive();
-  if (ret != HAL_OK)
-  {
-    while (1) { ; }
-  }
-
-  /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2 clocks dividers */
+  /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2
+     clocks dividers */
   RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
-
-#ifdef FREQ_216
-  ret = HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7);
-#else
-  ret = HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_6);
-#endif
-
-  if (ret != HAL_OK)
-  {
-    while (1) { ; }
-  }
+  HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
 }
 
 /**
@@ -332,13 +266,13 @@ void SystemClock_Config(void)
   */
 static void MPU_Config(void)
 {
-  MPU_Region_InitTypeDef MPU_InitStruct;
+  //MPU_Region_InitTypeDef MPU_InitStruct;
 
   /* Disable the MPU */
   HAL_MPU_Disable();
 
   /* Configure the MPU attributes as WT for SDRAM */
-    MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+    /*MPU_InitStruct.Enable = MPU_REGION_ENABLE;
   #ifdef USE_SDRAM
     MPU_InitStruct.BaseAddress = 0xC0000000;
     MPU_InitStruct.Size = MPU_REGION_SIZE_8MB;
@@ -355,10 +289,10 @@ static void MPU_Config(void)
   MPU_InitStruct.SubRegionDisable = 0x00;
   MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
 
-  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);*/
 
   /* Enable the MPU */
-  HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
+  //HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 }
 
 /**
@@ -369,7 +303,7 @@ static void MPU_Config(void)
 static void CPU_CACHE_Enable(void)
 {
   /* Enable branch prediction */
-  SCB->CCR |= (1 << 18);
+  //SCB->CCR |= (1 << 18);
   __DSB();
 
   /* Enable I-Cache */
@@ -389,7 +323,7 @@ static void Error_Handler(void)
   while (1)
   {
     /* LED1 blinks */
-    BSP_LED_Toggle(LED1);
+    BSP_LED_Toggle(Led_TypeDef::LED3);
     HAL_Delay(100);
   }
 }
