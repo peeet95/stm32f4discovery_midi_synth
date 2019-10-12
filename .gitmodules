@@ -1,3 +1,6 @@
 [submodule "src/lfluidsynth"]
 	path = src/lfluidsynth
 	url = https://github.com/julbouln/lfluidsynth
+[submodule "Src/--force"]
+	path = Src/--force
+	url = https://github.com/julbouln/lfluidsynth.git
