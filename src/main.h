@@ -40,6 +40,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_sai.h"
+#include "stm32f4xx_hal_spi.h"
+#include "stm32f4xx_hal_ltdc.h"
 #include "stm32f4xx_hal_tim.h"
 #include "stm32f4xx_hal_pcd.h"
 #include "stm32f4xx_hal_hcd.h"
@@ -49,17 +51,12 @@
 #include "stm32f4xx_hal_flash_ex.h"
 #include "stm32f429xx.h"
 
-/*#include "usbd_core.h"
-#include "usbd_desc.h"
-#include "usbd_audio.h"
-#include "usbd_midi_if.h"*/
-
 #include "stm32f429i_discovery.h"
+#include "stm32f429i_discovery_sd.h"
+#include "stm32f429i_discovery_sdram.h"
 
 #include "ff_gen_drv.h"
 #include "sd_diskio.h"
-
-#include "qspi_wrapper.h"
 
 #include <arm_math.h>
 
@@ -96,9 +93,6 @@
 
 /* #define SDRAM_MEMORY_WIDTH            FMC_SDRAM_MEM_BUS_WIDTH_8 */
 #define SDRAM_MEMORY_WIDTH            FMC_SDRAM_MEM_BUS_WIDTH_16
-
-/* #define SDCLOCK_PERIOD                   FMC_SDRAM_CLOCK_PERIOD_2 */
-#define SDCLOCK_PERIOD                FMC_SDRAM_CLOCK_PERIOD_3
 
 #define SDRAM_TIMEOUT     ((uint32_t)0xFFFF) 
 

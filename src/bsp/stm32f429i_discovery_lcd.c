@@ -73,6 +73,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f429i_discovery_lcd.h"
+#include "stm32f4xx_hal_ltdc.h"
+#include "stm32f4xx_hal_dma2d.h"
 #include "../../../Utilities/Fonts/fonts.h"
 #include "../../../Utilities/Fonts/font24.c"
 #include "../../../Utilities/Fonts/font20.c"

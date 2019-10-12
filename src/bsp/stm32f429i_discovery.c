@@ -36,6 +36,7 @@
   
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f429i_discovery.h"
+#include "stm32f4xx_hal_spi.h"
 
 /** @defgroup BSP BSP
   * @{

@@ -158,7 +158,7 @@ DRESULT SD_write(BYTE lun, const BYTE *buff, DWORD sector, UINT count)
 DRESULT SD_ioctl(BYTE lun, BYTE cmd, void *buff)
 {
   DRESULT res = RES_ERROR;
-  SD_CardInfo CardInfo;
+  BSP_SD_CardInfo CardInfo;
   
   if (Stat & STA_NOINIT) return RES_NOTRDY;
   
@@ -172,7 +172,7 @@ DRESULT SD_ioctl(BYTE lun, BYTE cmd, void *buff)
   /* Get number of sectors on the disk (DWORD) */
   case GET_SECTOR_COUNT :
     BSP_SD_GetCardInfo(&CardInfo);
-    *(DWORD*)buff = CardInfo.CardCapacity / BLOCK_SIZE;
+    *(DWORD*)buff = CardInfo.BlockNbr / BLOCK_SIZE;
     res = RES_OK;
     break;
   

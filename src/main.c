@@ -2,13 +2,13 @@
 #include "lfluidsynth.h"
 
 
-USBD_HandleTypeDef USBD_Device;
-
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
+
+#define SD_SOUNDFONT_ROM
 
 #ifdef SD_SOUNDFONT_ROM
 FATFS SDFatFs __attribute__((section(".SRAM")));  /* File system object for SD card logical drive */
@@ -73,37 +73,6 @@ void BSP_AUDIO_OUT_TransferComplete_CallBack(void)
 
 }
 
-void QSPI_init() {
-
-  BSP_QSPI_DeInit();
-
-  static QSPI_Info pQSPI_Info;
-  uint8_t status;
-  status = BSP_QSPI_Init();
-
-  /*##-2- Read & check the QSPI info #######################################*/
-  /* Initialize the structure */
-  pQSPI_Info.FlashSize        = (uint32_t)0x00;
-  pQSPI_Info.EraseSectorSize    = (uint32_t)0x00;
-  pQSPI_Info.EraseSectorsNumber = (uint32_t)0x00;
-  pQSPI_Info.ProgPageSize       = (uint32_t)0x00;
-  pQSPI_Info.ProgPagesNumber    = (uint32_t)0x00;
-
-  /* Read the QSPI memory info */
-  BSP_QSPI_GetInfo(&pQSPI_Info);
-
-  /* Test the correctness */
-  if ((pQSPI_Info.FlashSize != 0x1000000) || (pQSPI_Info.EraseSectorSize != 0x1000)  ||
-      (pQSPI_Info.ProgPageSize != 0x100)  || (pQSPI_Info.EraseSectorsNumber != 4096) ||
-      (pQSPI_Info.ProgPagesNumber != 65536))
-  {
-    BSP_LED_Off(Led_TypeDef::LED3);
-  }
-
-#ifdef QSPI_MEMORY_MAPPED
-  BSP_QSPI_MemoryMappedMode();
-#endif
-}
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -136,13 +105,13 @@ int main(void)
   SystemClock_Config();
 
   /* Configure LED1 and LED3 */
-  BSP_LED_Init(Led_TypeDef::LED3);
+  BSP_LED_Init(LED3);
 
   HAL_Delay(100);
 
   setbuf(stdout, NULL);
 
-  BSP_LED_Off(Led_TypeDef::LED3);
+  BSP_LED_Off(LED3);
 
 #ifdef SD_SOUNDFONT_ROM
   SD_init();
@@ -170,7 +139,7 @@ int main(void)
   sfont_id = fluid_synth_sfload(synth, SOUNDFONT_FILE, 1);
   fluid_synth_set_interp_method(synth, -1, FLUID_INTERP_NONE);
 //  fluid_synth_set_interp_method(synth, -1, FLUID_INTERP_LINEAR);
-  BSP_LED_On(Led_TypeDef::LED3);
+  BSP_LED_On(LED3);
 
   /* Make the connection and initialize to USB_OTG/usbdc_core */
   /*USBD_Init(&USBD_Device, &AUDIO_Desc, 0);
@@ -193,7 +162,7 @@ int main(void)
 
   while (1)
   {
-    BSP_LED_Toggle(Led_TypeDef::LED3);
+    BSP_LED_Toggle(LED3);
     HAL_Delay(1000);
   }
 
@@ -323,7 +292,7 @@ static void Error_Handler(void)
   while (1)
   {
     /* LED1 blinks */
-    BSP_LED_Toggle(Led_TypeDef::LED3);
+    BSP_LED_Toggle(LED3);
     HAL_Delay(100);
   }
 }

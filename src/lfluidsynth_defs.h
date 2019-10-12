@@ -2,10 +2,11 @@
 #define LFLUIDSYNTH_DEFS_H
 
 #include "ff_wrapper.h"
-#include "qspi_wrapper.h"
 #include "arm_math.h"
 
 #define FLUID_BUFSIZE       256
+
+#define FLUID_SAMPLE_FORMAT_FLOAT
 
 //#define FLUID_SAMPLE_MAX_MEM 6291456 // 6 MB
 #define FLUID_SAMPLE_MAX_MEM 4194304 // 4 MB
@@ -34,19 +35,6 @@
 #define FLUID_ARRAY(_t,_n)           (_t*)malloc((_n)*sizeof(_t))
 #define FLUID_FREE(_p)               free(_p)
 
-#ifdef QSPI_SOUNDFONT_ROM
-typedef QSPI_FILE* fluid_file;
-
-#define FLUID_FOPEN(_f,_m)       QSPI_fopen(_f,_m)
-#define FLUID_FCLOSE(_f)             QSPI_fclose(_f)
-#define FLUID_FREAD(_p,_s,_n,_f)     QSPI_fread(_p,_s,_n,_f)
-#define FLUID_FSEEK(_f,_n,_set)      QSPI_fseek(_f,_n,_set)
-#define FLUID_FTELL(_f)				 QSPI_ftell(_f)
-#define FLUID_FEOF(_f)				 QSPI_feof(_f)
-#define FLUID_REWIND(_f)			 QSPI_fseek(_f,0,SEEK_SET)
-#define FLUID_MMAP(_p,_s,_f)				QSPI_mmap(_p,_s,_f)
-
-#else
 typedef FIL*  fluid_file;
 
 #define FLUID_FOPEN(_f,_m)       ff_fopen(_f,_m)
@@ -57,7 +45,6 @@ typedef FIL*  fluid_file;
 #define FLUID_FEOF(_f)				 f_eof(_f)
 #define FLUID_REWIND(_f)			 ff_fseek(_f,0,SEEK_SET)
 #define FLUID_MMAP(_i)	
-#endif
 
 #define FLUID_MEMCPY(_dst,_src,_n)   memcpy(_dst,_src,_n)
 #define FLUID_MEMSET(_s,_c,_n)       memset(_s,_c,_n)
