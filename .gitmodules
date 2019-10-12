@@ -1,1 +1,4 @@
 
+[submodule "src/lfluidsynth"]
+	path = src/lfluidsynth
+	url = https://github.com/julbouln/lfluidsynth.git
