@@ -26,6 +26,8 @@
 /* USER CODE BEGIN Includes */
 #include "stm32f429i_discovery_lcd.h"
 //#include "LCD_DISCO_F429ZI.h"
+#include <stdlib.h>
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

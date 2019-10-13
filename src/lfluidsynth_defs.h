@@ -2,8 +2,7 @@
 #define LFLUIDSYNTH_DEFS_H
 
 #include "ff_wrapper.h"
-#include <stdint.h>
-#define ARM_MATH_CM4
+#include "main.h"
 #include "arm_math.h"
 
 #define FLUID_BUFSIZE       256
