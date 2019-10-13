@@ -1258,6 +1258,11 @@ static void MspInit(void)
 void BSP_LCD_DrawPixel(uint16_t Xpos, uint16_t Ypos, uint32_t RGB_Code)
 {
   /* Write data value to all SDRAM memory */
+#ifdef BSP_LCD_ROTATE_90
+    uint32_t temp = Ypos;
+    Ypos = BSP_LCD_GetYSize() - Xpos - 1;
+    Xpos = temp;
+#endif
   *(__IO uint32_t*) (LtdcHandler.LayerCfg[ActiveLayer].FBStartAdress + (4*(Ypos*BSP_LCD_GetXSize() + Xpos))) = RGB_Code;
 }
 

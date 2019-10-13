@@ -24,10 +24,11 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "stm32f429i_discovery_lcd.h"
+
 //#include "LCD_DISCO_F429ZI.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "app.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -136,17 +137,7 @@ int main(void)
   MX_SPI5_Init();
   MX_DMA2D_Init();
   /* USER CODE BEGIN 2 */
-  BSP_LCD_Init();
-  BSP_LCD_LayerDefaultInit(0, 0xD0000000);
-  BSP_LCD_SelectLayer(0);
-  BSP_LCD_Clear(LCD_COLOR_RED);
-  BSP_LCD_SetTransparency(0, 255);
-  BSP_LCD_SetLayerVisible(0, !0U);
-  BSP_LCD_SetBackColor(LCD_COLOR_RED);
-  BSP_LCD_DisplayStringAt(100, 100, "Hallo, Welt", 1);
-  BSP_LCD_DisplayOn();
-  //BSP_LCD_SetFont(&Font20);
-  //lcd.DisplayStringAt(0, LINE(1), (uint8_t *)"MBED EXAMPLE", CENTER_MODE);
+  app_run();
   /* USER CODE END 2 */
 
   /* Infinite loop */
